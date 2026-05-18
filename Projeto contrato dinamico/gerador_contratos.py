@@ -137,7 +137,7 @@ class Gerador:
         substituicoes = {
             '{RAZAO_SOCIAL}': razao_social,
             '{CNPJ}': cnpj_formatado,
-            '{TIPO_LICENCA}': self.TIPOS_LICENCA[tipo_licanca],
+            '{TIPO_LICENCA}': self.TIPOS_LICENCA[tipo_licenca],
             '{DATA}': datetime.now().strftime('%d de %B de %Y'),
             '{DATA_BR}': datetime.now().strftime('%d/%m/%Y'),
         }
