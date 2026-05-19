@@ -38,38 +38,13 @@ class ValidadorDados:
 
 class Gerador:
     TIPOS_LICENCA = {
-    '1': 'SMART de 01 a 02 equipos/Consultorios',
-    '2': 'Clinic de 01 a 02 equipos/Consultorios',
-    '3': 'Clinic de 03 a 04 equipos/Consultorios',
-    '4': 'Clinic de 05 a 08 equipos/Consultorios',
-    '5': 'Clinic de 09 a 12 equipos/Consultorios'
-}
+        '1': 'Smart',
+        '2': 'Clinic (1 a 2 Equipos/Consultorios)',
+        '3': 'Clinic (3 a 4 Equipos/Consultorios)',
+        '4': 'Clinic (5 a 8 Equipos/Consultorios)',
+        '5': 'Clinic (9 a 12 Equipos/Consultorios)',
+    }
     
-    RANGES_EQUIPOS = {
-    '1': (1, 2),      # SMART: 1 a 2
-    '2': (1, 2),      # Clinic 1-2: 1 a 2
-    '3': (3, 4),      # Clinic 3-4: 3 a 4
-    '4': (5, 8),      # Clinic 5-8: 5 a 8
-    '5': (9, 12),     # Clinic 9-12: 9 a 12
-}
-
-    TIPOS_IMPLANTACAO = {
-    '1': ['Smart', 'Clinic'],  # SMART tem ambas as opções
-    '2': ['Clinic'],            # Clinic tem apenas Clinic,
-}
-
-    TIPOS_MIGRACAO = {
-    '1': 'Padrão',
-    '2': 'Inteligente'
-}
-
-    FORMATOS_PAGAMENTO = {
-    '1': 'Recorrente',
-    '2': 'Plano Integral no Cartão',
-    '3': 'PIX',
-    '4': 'Mensal'
-}
-
     def __init__(self):
         self.caminho_templates = Path('templates')
         self.caminho_saida = Path('contratos_gerados')
@@ -116,7 +91,7 @@ class Gerador:
         for paragrafo in doc.paragraphs:
             self._substituir_em_paragrafo(paragrafo, substituicoes)
     
-    def gerar_contrato_pf(self, nome, cpf, tipo_licenca, tipo_implantacao=None, qtd_equipos=None, tipo_migracao=None, observacao=None, formato_pagamento=None):
+    def gerar_contrato_pf(self, nome, cpf, tipo_licenca):
         """Gera contrato para pessoa física"""
         # Validação
         cpf_limpo = ValidadorDados.validar_cpf(cpf)
@@ -131,13 +106,9 @@ class Gerador:
             '{NOME_CLIENTE}': nome,
             '{CPF}': cpf_formatado,
             '{TIPO_LICENCA}': self.TIPOS_LICENCA[tipo_licenca],
-            '{TIPO_IMPLANTACAO}': tipo_implantacao,      # novo
-            '{QTD_EQUIPOS}': str(qtd_equipos),           # novo
-            '{TIPO_MIGRACAO}': tipo_migracao,            # novo
-            '{OBSERVACAO}': observacao,                  # novo
-            '{FORMATO_PAGAMENTO}': formato_pagamento,    # novo
             '{DATA}': datetime.now().strftime('%d de %B de %Y'),
             '{DATA_BR}': datetime.now().strftime('%d/%m/%Y'),
+            '{QTD_EQUIPOS}': '1',  # Exemplo fixo, pode ser parametrizado
         }
         
         # Substitui em corpo e tabelas
@@ -151,7 +122,7 @@ class Gerador:
         
         return caminho_saida
     
-    def gerar_contrato_pj(self, nome, cpf, tipo_licenca, tipo_implantacao=None, qtd_equipos=None, tipo_migracao=None, observacao=None, formato_pagamento=None):
+    def gerar_contrato_pj(self, razao_social, cnpj, tipo_licenca):
         """Gera contrato para pessoa jurídica"""
         # Validação
         cnpj_limpo = ValidadorDados.validar_cnpj(cnpj)
@@ -166,11 +137,6 @@ class Gerador:
             '{RAZAO_SOCIAL}': razao_social,
             '{CNPJ}': cnpj_formatado,
             '{TIPO_LICENCA}': self.TIPOS_LICENCA[tipo_licenca],
-            '{TIPO_IMPLANTACAO}': tipo_implantacao,      # novo
-            '{QTD_EQUIPOS}': str(qtd_equipos),           # novo
-            '{TIPO_MIGRACAO}': tipo_migracao,            # novo
-            '{OBSERVACAO}': observacao,                  # novo
-            '{FORMATO_PAGAMENTO}': formato_pagamento,    # novo
             '{DATA}': datetime.now().strftime('%d de %B de %Y'),
             '{DATA_BR}': datetime.now().strftime('%d/%m/%Y'),
         }
