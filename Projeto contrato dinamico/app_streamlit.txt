@@ -418,67 +418,67 @@ with col_form:
         tipo_licenca_key = [k for k, v in gerador.TIPOS_LICENCA.items() if v == tipo_licenca_pj][0]
         min_eq, max_eq = gerador.RANGES_EQUIPOS[tipo_licenca_key]
     
-    qtd_equipos_pj = st.selectbox(
-        f"Quantidade de Equipos/Consultórios ({min_eq} a {max_eq})",
-        options=list(range(min_eq, max_eq + 1)),
-        key="pj_equipos"
-    )
+        qtd_equipos_pj = st.selectbox(
+            f"Quantidade de Equipos/Consultórios ({min_eq} a {max_eq})",
+            options=list(range(min_eq, max_eq + 1)),
+            key="pj_equipos"
+        )
+        
+        tipo_migracao_pj = st.selectbox(
+            "Tipo de Migração",
+            options=['Padrão', 'Inteligente'],
+            key="pj_migracao"
+        )
+        
+        observacao_pj = st.text_area(
+            "Observação",
+            placeholder="Digite observações se necessário",
+            key="pj_observacao"
+        )
+        
+        formato_pagamento_pj = st.selectbox(
+            "Formato de Pagamento",
+            options=['Recorrente', 'Plano Integral no Cartão', 'PIX', 'Mensal'],
+            key="pj_pagamento"
+        )
     
-    tipo_migracao_pj = st.selectbox(
-        "Tipo de Migração",
-        options=['Padrão', 'Inteligente'],
-        key="pj_migracao"
-    )
-    
-    observacao_pj = st.text_area(
-        "Observação",
-        placeholder="Digite observações se necessário",
-        key="pj_observacao"
-    )
-    
-    formato_pagamento_pj = st.selectbox(
-        "Formato de Pagamento",
-        options=['Recorrente', 'Plano Integral no Cartão', 'PIX', 'Mensal'],
-        key="pj_pagamento"
-    )
-    
-    if st.button("🔄 Gerar Contrato - PJ", key="btn_pj"):
-        if not razao_social.strip():
-            st.error("❌ Por favor, preencha a razão social.")
-        elif not cnpj.strip():
-            st.error("❌ Por favor, preencha o CNPJ.")
-        else:
-            try:
-                with st.spinner("⏳ Gerando contrato..."):
-                    caminho = gerador.gerar_contrato_pj(
-                        razao_social,
-                        cnpj,
-                        tipo_licenca_key,
-                        tipo_implantacao=tipo_implantacao_pj,
-                        qtd_equipos=qtd_equipos_pj,
-                        tipo_migracao=tipo_migracao_pj,
-                        observacao=observacao_pj,
-                        formato_pagamento=formato_pagamento_pj
-                    )
+        if st.button("🔄 Gerar Contrato - PJ", key="btn_pj"):
+            if not razao_social.strip():
+                st.error("❌ Por favor, preencha a razão social.")
+            elif not cnpj.strip():
+                st.error("❌ Por favor, preencha o CNPJ.")
+            else:
+                try:
+                    with st.spinner("⏳ Gerando contrato..."):
+                        caminho = gerador.gerar_contrato_pj(
+                            razao_social,
+                            cnpj,
+                            tipo_licenca_key,
+                            tipo_implantacao=tipo_implantacao_pj,
+                            qtd_equipos=qtd_equipos_pj,
+                            tipo_migracao=tipo_migracao_pj,
+                            observacao=observacao_pj,
+                            formato_pagamento=formato_pagamento_pj
+                        )
+                    
+                    st.success(f"✅ Contrato gerado com sucesso!")
+                    st.info(f"📁 Arquivo: `{caminho.name}`")
+                    
+                    with open(caminho, "rb") as arquivo:
+                        st.download_button(
+                            label="📥 Baixar Contrato",
+                            data=arquivo.read(),
+                            file_name=caminho.name,
+                            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                        )
                 
-                st.success(f"✅ Contrato gerado com sucesso!")
-                st.info(f"📁 Arquivo: `{caminho.name}`")
-                
-                with open(caminho, "rb") as arquivo:
-                    st.download_button(
-                        label="📥 Baixar Contrato",
-                        data=arquivo.read(),
-                        file_name=caminho.name,
-                        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                    )
-            
-            except ValueError as e:
-                st.error(f"❌ Erro de validação: {e}")
-            except FileNotFoundError as e:
-                st.error(f"❌ Template não encontrado: {e}")
-                st.warning("Verifique se os templates estão na pasta `/templates/`")
-            except Exception as e:
-                st.error(f"❌ Erro ao gerar contrato: {e}")
+                except ValueError as e:
+                    st.error(f"❌ Erro de validação: {e}")
+                except FileNotFoundError as e:
+                    st.error(f"❌ Template não encontrado: {e}")
+                    st.warning("Verifique se os templates estão na pasta `/templates/`")
+                except Exception as e:
+                    st.error(f"❌ Erro ao gerar contrato: {e}")
 
     with tab_pf:
         st.subheader("Dados da Pessoa Física")
@@ -514,67 +514,67 @@ with col_form:
         tipo_licenca_key = [k for k, v in gerador.TIPOS_LICENCA.items() if v == tipo_licenca_pf][0]
         min_eq, max_eq = gerador.RANGES_EQUIPOS[tipo_licenca_key]
         
-    qtd_equipos_pf = st.selectbox(
-            f"Quantidade de Equipos/Consultórios ({min_eq} a {max_eq})",
-            options=list(range(min_eq, max_eq + 1)),
-            key="pf_equipos"
-        )
+        qtd_equipos_pf = st.selectbox(
+                f"Quantidade de Equipos/Consultórios ({min_eq} a {max_eq})",
+                options=list(range(min_eq, max_eq + 1)),
+                key="pf_equipos"
+            )
+            
+        tipo_migracao_pf = st.selectbox(
+                "Tipo de Migração",
+                options=['Padrão', 'Inteligente'],
+                key="pf_migracao"
+            )
+            
+        observacao_pf = st.text_area(
+                "Observação",
+                placeholder="Digite observações se necessário",
+                key="pf_observacao"
+            )
+            
+        formato_pagamento_pf = st.selectbox(
+                "Formato de Pagamento",
+                options=['Recorrente', 'Plano Integral no Cartão', 'PIX', 'Mensal'],
+                key="pf_pagamento"
+            )
         
-    tipo_migracao_pf = st.selectbox(
-            "Tipo de Migração",
-            options=['Padrão', 'Inteligente'],
-            key="pf_migracao"
-        )
-        
-    observacao_pf = st.text_area(
-            "Observação",
-            placeholder="Digite observações se necessário",
-            key="pf_observacao"
-        )
-        
-    formato_pagamento_pf = st.selectbox(
-            "Formato de Pagamento",
-            options=['Recorrente', 'Plano Integral no Cartão', 'PIX', 'Mensal'],
-            key="pf_pagamento"
-        )
-        
-    if st.button("🔄 Gerar Contrato - PF", key="btn_pf"):
-            if not nome.strip():
-                st.error("❌ Por favor, preencha o nome completo.")
-            elif not cpf.strip():
-                st.error("❌ Por favor, preencha o CPF.")
-            else:
-                try:
-                    with st.spinner("⏳ Gerando contrato..."):
-                        caminho = gerador.gerar_contrato_pf(
-                            nome, 
-                            cpf, 
-                            tipo_licenca_key,
-                            tipo_implantacao=tipo_implantacao_pf,
-                            qtd_equipos=qtd_equipos_pf,
-                            tipo_migracao=tipo_migracao_pf,
-                            observacao=observacao_pf,
-                            formato_pagamento=formato_pagamento_pf
-                        )
+        if st.button("🔄 Gerar Contrato - PF", key="btn_pf"):
+                if not nome.strip():
+                    st.error("❌ Por favor, preencha o nome completo.")
+                elif not cpf.strip():
+                    st.error("❌ Por favor, preencha o CPF.")
+                else:
+                    try:
+                        with st.spinner("⏳ Gerando contrato..."):
+                            caminho = gerador.gerar_contrato_pf(
+                                nome, 
+                                cpf, 
+                                tipo_licenca_key,
+                                tipo_implantacao=tipo_implantacao_pf,
+                                qtd_equipos=qtd_equipos_pf,
+                                tipo_migracao=tipo_migracao_pf,
+                                observacao=observacao_pf,
+                                formato_pagamento=formato_pagamento_pf
+                            )
+                        
+                        st.success(f"✅ Contrato gerado com sucesso!")
+                        st.info(f"📁 Arquivo: `{caminho.name}`")
+                        
+                        with open(caminho, "rb") as arquivo:
+                            st.download_button(
+                                label="📥 Baixar Contrato",
+                                data=arquivo.read(),
+                                file_name=caminho.name,
+                                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            )
                     
-                    st.success(f"✅ Contrato gerado com sucesso!")
-                    st.info(f"📁 Arquivo: `{caminho.name}`")
-                    
-                    with open(caminho, "rb") as arquivo:
-                        st.download_button(
-                            label="📥 Baixar Contrato",
-                            data=arquivo.read(),
-                            file_name=caminho.name,
-                            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                        )
-                
-                except ValueError as e:
-                    st.error(f"❌ Erro de validação: {e}")
-                except FileNotFoundError as e:
-                    st.error(f"❌ Template não encontrado: {e}")
-                    st.warning("Verifique se os templates estão na pasta `/templates/`")
-                except Exception as e:
-                    st.error(f"❌ Erro ao gerar contrato: {e}")
+                    except ValueError as e:
+                        st.error(f"❌ Erro de validação: {e}")
+                    except FileNotFoundError as e:
+                        st.error(f"❌ Template não encontrado: {e}")
+                        st.warning("Verifique se os templates estão na pasta `/templates/`")
+                    except Exception as e:
+                        st.error(f"❌ Erro ao gerar contrato: {e}")
 
 with col_preview:
     st.markdown(
