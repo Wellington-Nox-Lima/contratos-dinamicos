@@ -276,31 +276,15 @@ def encontrar_chave_licenca(gerador: Gerador, nome_licenca: str) -> str:
 
 
 def mostrar_download(caminho: Path) -> None:
-    conteudo = caminho.read_bytes()
-    st.session_state["ultimo_contrato"] = {
-        "nome": caminho.name,
-        "conteudo": conteudo,
-        "caminho": str(caminho),
-    }
     st.success("Contrato gerado com sucesso.")
-    st.info(f"Arquivo salvo em `contratos_gerados/` e pronto para baixar: `{caminho.name}`")
-    mostrar_ultimo_download()
-
-
-def mostrar_ultimo_download() -> None:
-    contrato = st.session_state.get("ultimo_contrato")
-    if not contrato:
-        return
-
-    st.download_button(
-        label="Baixar na maquina",
-        data=contrato["conteudo"],
-        file_name=contrato["nome"],
-        mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
-        type="primary",
-        use_container_width=True,
-        on_click="ignore",
-    )
+    st.info(f"Arquivo: `{caminho.name}`")
+    with open(caminho, "rb") as arquivo:
+        st.download_button(
+            label="Baixar Contrato",
+            data=arquivo.read(),
+            file_name=caminho.name,
+            mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        )
 
 
 def gerar_pf(gerador: Gerador, nome: str, cpf: str, tipo_licenca: str) -> None:
